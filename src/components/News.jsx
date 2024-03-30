@@ -14,6 +14,7 @@ function News(props) {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      props.setProgress(0);
       try {
         const res = await fetch(
           `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=6d72f93a215346a6875c195f5709910f&page=${page}&pageSize=${pageSize}`
@@ -29,6 +30,7 @@ function News(props) {
       } finally {
         setIsLoading(false);
       }
+      props.setProgress(100);
     };
     fetchData();
   }, [page, props.country, props.category]); // Added props.country and props.category to the dependency array
