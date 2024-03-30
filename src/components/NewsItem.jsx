@@ -32,6 +32,9 @@ function NewsItem(props) {
       <div className="card-body">
         <h5 className="card-title">{props.title.slice(0, 40)}...</h5>
         <p className="card-text">{props.description.slice(0, 100)}...</p>
+        <p className="card-text">
+          <small className="text-muted">Published by  {props.author} on {props.publishedAt.slice(0,10)}</small> 
+        </p>
         <Link
           to={props.url}
           className="btn btn-dark"
