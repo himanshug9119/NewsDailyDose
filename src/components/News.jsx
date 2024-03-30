@@ -41,31 +41,55 @@ function News() {
   return (
     <div className="container">
       <div className="contaiiner">
-        <h1 className="text-secondary-emphasis">NewsDaily Dose</h1>
+        <h3 className="text-secondary-emphasis p-2">News Daily Dose</h3>
       </div>
-      <div className="container d-flex flex-row gap-5 flex-wrap">
-        {data.map((element, index) => (
-          <NewsItem key={index} {...element} />
-        ))}
-        <div className="container d-flex justify-content-between mt-3">
-          <button
-            disabled={page <= 1 || isLoading}
-            onClick={handlePrev}
-            type="button"
-            className="btn btn-secondary"
+      {isLoading && (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "100vh" }}
+        >
+          <div
+            className="spinner-border text-info m-5"
+            style={{ width: "3rem", height: "3rem" }}
+            role="status"
           >
-            &larr; Prev
-          </button>
-          <button
-            disabled={Math.ceil(totalResults / pageSize) <= page || isLoading}
-            onClick={handleNext}
-            type="button"
-            className="btn btn-success"
-          >
-            Next &rarr;
-          </button>
+            <span className="sr-only"></span>
+          </div>
         </div>
-      </div>
+      )}
+      {data.length === 0 && !isLoading && (
+        <h2 className="text-center">No news available</h2>
+      )}
+      {!isLoading && data.length > 0 && (
+        <h5 className="text-center p-2">
+          Showing {data.length} of {totalResults} results
+        </h5>
+      )}
+      {!isLoading && (
+        <div className="container d-flex flex-row gap-5 flex-wrap">
+          {data.map((element, index) => (
+            <NewsItem key={index} {...element} />
+          ))}
+          <div className="container d-flex justify-content-between mt-3">
+            <button
+              disabled={page <= 1 || isLoading}
+              onClick={handlePrev}
+              type="button"
+              className="btn btn-secondary"
+            >
+              &larr; Prev
+            </button>
+            <button
+              disabled={Math.ceil(totalResults / pageSize) <= page || isLoading}
+              onClick={handleNext}
+              type="button"
+              className="btn btn-success"
+            >
+              Next &rarr;
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

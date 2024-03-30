@@ -6,18 +6,28 @@ function NewsItem(props) {
     width: "18rem",
   };
 
-  const defaultImage = "https://media-cldnry.s-nbcnews.com/image/upload/t_nbcnews-fp-1200-630,f_auto,q_auto:best/rockcms/2024-03/240329-francis-scott-key-bridge-al-0855-d9319e.jpg";
+  const defaultImage =
+    "https://media-cldnry.s-nbcnews.com/image/upload/t_nbcnews-fp-1200-630,f_auto,q_auto:best/rockcms/2024-03/240329-francis-scott-key-bridge-al-0855-d9319e.jpg";
 
   // Check if all required properties are available
   if (!props.title || !props.description || !props.url || !props.urlToImage) {
-    return null; 
+    return null;
   }
+
+  const imageUrl =
+    props.urlToImage && isValidUrl(props.urlToImage)
+      ? props.urlToImage
+      : defaultImage;
+
   return (
     <div className="card" style={cardStyle}>
       <img
-        src={props.urlToImage ? props.urlToImage : defaultImage}
+        src={imageUrl}
         className="card-img-top"
         alt="..."
+        onError={(e) => {
+          e.target.src = defaultImage;
+        }}
       />
       <div className="card-body">
         <h5 className="card-title">{props.title.slice(0, 40)}...</h5>
@@ -34,5 +44,15 @@ function NewsItem(props) {
     </div>
   );
 }
+
+// Helper function to check if a string is a valid URL
+const isValidUrl = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export default NewsItem;
