@@ -6,6 +6,12 @@ function NewsItem(props) {
     width: "18rem",
   };
 
+  const imageStyle = {
+    width: "100%",
+    height: "200px", // Set the desired height for the image
+    objectFit: "cover", // This will ensure the image covers the given height and width without stretching
+  };
+
   const defaultImage =
     "https://media-cldnry.s-nbcnews.com/image/upload/t_nbcnews-fp-1200-630,f_auto,q_auto:best/rockcms/2024-03/240329-francis-scott-key-bridge-al-0855-d9319e.jpg";
 
@@ -25,6 +31,7 @@ function NewsItem(props) {
         src={imageUrl}
         className="card-img-top"
         alt="..."
+        style={imageStyle}
         onError={(e) => {
           e.target.src = defaultImage;
         }}
@@ -33,7 +40,9 @@ function NewsItem(props) {
         <h5 className="card-title">{props.title.slice(0, 40)}...</h5>
         <p className="card-text">{props.description.slice(0, 100)}...</p>
         <p className="card-text">
-          <small className="text-muted">Published by  {props.author} on {props.publishedAt.slice(0,10)}</small> 
+          <small className="text-muted">
+            Published by {props.author} on {props.publishedAt.slice(0, 10)}
+          </small>
         </p>
         <Link
           to={props.url}

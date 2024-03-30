@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import NewsItem from "./NewsItem";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Spinner from "./Spinner";
+import EndMessage from "./EndMessage";
 
 function News(props) {
   const [data, setData] = useState([]);
@@ -20,7 +23,7 @@ function News(props) {
         }
         const jsonData = await res.json();
         setTotalResults(jsonData.totalResults);
-        setData(jsonData.articles);
+        setData((prevData) => [...prevData, ...jsonData.articles]);
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -28,72 +31,40 @@ function News(props) {
       }
     };
     fetchData();
-  }, [page]);
+  }, [page, props.country, props.category]); // Added props.country and props.category to the dependency array
 
-  const handleNext = () => {
+  const fetchMoreData = () => {
     setPage(page + 1);
-  };
-
-  const handlePrev = () => {
-    setPage(page - 1);
   };
 
   return (
     <div className="container p-4">
-      <div className="contaiiner text-center">
+      <div className="container text-center">
         <h3 className="text-secondary-emphasis p-1">News Daily Dose</h3>
       </div>
-      {isLoading && (
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "100vh" }}
-        >
-          <div
-            className="spinner-border text-info m-5"
-            style={{ width: "3rem", height: "3rem" }}
-            role="status"
-          >
-            <span className="sr-only"></span>
-          </div>
-        </div>
-      )}
+      {isLoading && <Spinner />}
       {data.length === 0 && !isLoading && (
         <h2 className="text-center">No news available</h2>
       )}
-      {!isLoading && data.length > 0 && (
-        <div className="text-end">
-          <h5 className="p-1">
-            Showing {data.length} of {totalResults} results
-          </h5>
-        </div>
-      )}
       {!isLoading && (
-        <div className="container d-flex flex-row gap-5 flex-wrap">
-          {data.map((element, index) => (
-            <NewsItem key={index} {...element} />
-          ))}
-          <div className="container d-flex justify-content-between mt-3">
-            <button
-              disabled={page <= 1 || isLoading}
-              onClick={handlePrev}
-              type="button"
-              className="btn btn-outline-dark"
-            >
-              &larr; Prev
-            </button>
-            <button
-              disabled={Math.ceil(totalResults / pageSize) <= page || isLoading}
-              onClick={handleNext}
-              type="button"
-              className="btn btn-outline-dark"
-            >
-              Next &rarr;
-            </button>
+        <InfiniteScroll
+          dataLength={data.length}
+          next={fetchMoreData}
+          hasMore={data.length < totalResults}
+          loader={<Spinner />}
+          endMessage={<EndMessage />}
+        >
+          <div className="container d-flex flex-row gap-5 flex-wrap">
+            {data.map((element, index) => (
+              <NewsItem key={index} {...element} />
+            ))}
           </div>
-        </div>
+        </InfiniteScroll>
       )}
     </div>
   );
 }
+
+
 
 export default News;
