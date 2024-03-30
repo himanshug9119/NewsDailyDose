@@ -34,7 +34,7 @@ function NewsItem(props) {
         <p className="card-text">{props.description.slice(0, 100)}...</p>
         <Link
           to={props.url}
-          className="btn btn-primary"
+          className="btn btn-dark"
           target="_blank"
           rel="noopener noreferrer"
         >

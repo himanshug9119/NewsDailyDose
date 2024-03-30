@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NewsItem from "./NewsItem";
 
-function News() {
+function News(props) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -13,7 +13,7 @@ function News() {
       setIsLoading(true);
       try {
         const res = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=us&apiKey=6d72f93a215346a6875c195f5709910f&page=${page}&pageSize=${pageSize}`
+          `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=6d72f93a215346a6875c195f5709910f&page=${page}&pageSize=${pageSize}`
         );
         if (!res.ok) {
           throw new Error("Something went wrong");
@@ -39,9 +39,9 @@ function News() {
   };
 
   return (
-    <div className="container">
-      <div className="contaiiner">
-        <h3 className="text-secondary-emphasis p-2">News Daily Dose</h3>
+    <div className="container p-4">
+      <div className="contaiiner text-center">
+        <h3 className="text-secondary-emphasis p-1">News Daily Dose</h3>
       </div>
       {isLoading && (
         <div
@@ -61,9 +61,11 @@ function News() {
         <h2 className="text-center">No news available</h2>
       )}
       {!isLoading && data.length > 0 && (
-        <h5 className="text-center p-2">
-          Showing {data.length} of {totalResults} results
-        </h5>
+        <div className="text-end">
+          <h5 className="p-1">
+            Showing {data.length} of {totalResults} results
+          </h5>
+        </div>
       )}
       {!isLoading && (
         <div className="container d-flex flex-row gap-5 flex-wrap">
@@ -75,7 +77,7 @@ function News() {
               disabled={page <= 1 || isLoading}
               onClick={handlePrev}
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-outline-dark"
             >
               &larr; Prev
             </button>
@@ -83,7 +85,7 @@ function News() {
               disabled={Math.ceil(totalResults / pageSize) <= page || isLoading}
               onClick={handleNext}
               type="button"
-              className="btn btn-success"
+              className="btn btn-outline-dark"
             >
               Next &rarr;
             </button>
