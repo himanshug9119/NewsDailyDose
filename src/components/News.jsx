@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import NewsItem from "./NewsItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "./Spinner";
@@ -11,14 +12,15 @@ function News(props) {
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 20;
   const apiKey = props.apiKey;
-  // console.log(apiKey);
+  const { country, category, setProgress } = props;
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      props.setProgress(0);
+      setProgress(0);
       try {
         const res = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
+          `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
         );
         if (!res.ok) {
           throw new Error("Something went wrong");
@@ -31,10 +33,10 @@ function News(props) {
       } finally {
         setIsLoading(false);
       }
-      props.setProgress(100);
+      setProgress(100);
     };
     fetchData();
-  }, [page, props.country, props.category, props.apiKey]); // Added props.country and props.category to the dependency array
+  }, [page, country, category, apiKey, setProgress]);
 
   const fetchMoreData = () => {
     setPage(page + 1);
@@ -68,6 +70,11 @@ function News(props) {
   );
 }
 
-
+News.propTypes = {
+  apiKey: PropTypes.string.isRequired,
+  country: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  setProgress: PropTypes.func.isRequired,
+};
 
 export default News;

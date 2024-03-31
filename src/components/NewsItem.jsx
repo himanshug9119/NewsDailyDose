@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 function NewsItem(props) {
   const cardStyle = {
@@ -8,8 +9,8 @@ function NewsItem(props) {
 
   const imageStyle = {
     width: "100%",
-    height: "200px", // Set the desired height for the image
-    objectFit: "cover", // This will ensure the image covers the given height and width without stretching
+    height: "200px",
+    objectFit: "cover",
   };
 
   const defaultImage =
@@ -65,6 +66,15 @@ const isValidUrl = (url) => {
   } catch (error) {
     return false;
   }
+};
+
+NewsItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  publishedAt: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  urlToImage: PropTypes.string,
 };
 
 export default NewsItem;
